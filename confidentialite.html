@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Confidentialité AUDN</title>
+<style>body{margin:0}img{max-width:100%}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+  :root {
+    --ground: #f6f7f8;
+    --panel: #ffffff;
+    --ink: #15181c;
+    --muted: #5b636d;
+    --rule: #dde1e6;
+    --accent: #1f5f5b;
+    --sans: "IBM Plex Sans", ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+    --serif: "IBM Plex Serif", ui-serif, Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0e1013;
+      --panel: #15181c;
+      --ink: #e5e8ec;
+      --muted: #98a0ab;
+      --rule: #242a31;
+      --accent: #74c2b9;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0e1013;
+    --panel: #15181c;
+    --ink: #e5e8ec;
+    --muted: #98a0ab;
+    --rule: #242a31;
+    --accent: #74c2b9;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  .sheet {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 56px 72px;
+  }
+
+  .masthead { border-bottom: 1px solid var(--rule); padding-bottom: 22px; margin-bottom: 36px; }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.2rem + 2vw, 2.3rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0 0 14px;
+  }
+  .stamp { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+  h2 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.08rem;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+    margin: 40px 0 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+  }
+  .masthead + h2 { margin-top: 0; padding-top: 0; border-top: none; }
+
+  p { margin: 0 0 16px; }
+  strong { font-weight: 600; }
+  em { color: var(--muted); }
+
+  ol, ul { margin: 0 0 16px; padding-left: 1.3em; }
+  li { margin-bottom: 9px; }
+  li::marker { color: var(--muted); font-family: var(--sans); font-size: 0.9em; }
+
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .contact {
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 16px 18px;
+    margin-top: 40px;
+  }
+  .contact p { margin: 0; }
+  .contact p + p { margin-top: 6px; color: var(--muted); }
+</style>
+
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <p class="eyebrow">AUDN · Application personnelle</p>
+    <h1>Politique de confidentialité</h1>
+    <p class="stamp">Dernière mise à jour : 20 septembre 2026</p>
+  </header>
+
+  <p>AUDN est une application personnelle, utilisée par son seul auteur. Elle n'a pas d'utilisateurs
+  tiers, ne propose aucune inscription, et ne crée aucun compte.</p>
+
+  <h2>Responsable des données</h2>
+  <p>L'auteur de l'application, joignable à <a href="mailto:contact.alexandre.conty@gmail.com">contact.alexandre.conty@gmail.com</a></p>
+
+  <h2>Où vivent les données</h2>
+  <p>Les données d'AUDN sont stockées <strong>sur l'appareil</strong> et dans la <strong>base privée
+  iCloud</strong> du compte Apple de l'utilisateur (CloudKit, base privée). Elles ne transitent par
+  aucun serveur appartenant à l'auteur : il n'existe pas de serveur AUDN. L'auteur n'a aucun moyen
+  technique de lire les données d'un autre utilisateur, la base privée iCloud n'étant accessible
+  qu'au compte Apple qui l'a écrite.</p>
+  <p>Les identifiants d'accès aux services externes — clés d'API, secrets clients, clé privée
+  Enable Banking — sont conservés dans le <strong>Trousseau (Keychain)</strong> de l'appareil,
+  jamais en clair et jamais dans iCloud.</p>
+
+  <h2>Données bancaires</h2>
+  <p>AUDN lit les opérations bancaires de deux façons, toutes deux à l'initiative de l'utilisateur :</p>
+  <ol>
+    <li><strong>Import d'un fichier de relevé</strong> (OFX ou CSV) que l'utilisateur télécharge
+    lui-même depuis sa banque. Le fichier est analysé sur l'appareil ; rien n'est envoyé ailleurs.</li>
+    <li><strong>Connexion bancaire via Enable Banking</strong>, après autorisation explicite de
+    l'utilisateur auprès de sa banque. AUDN récupère alors le solde, le nom du compte et
+    l'historique des opérations.</li>
+  </ol>
+  <p>Le numéro de compte (IBAN) n'est jamais utilisé tel quel comme identifiant d'enregistrement :
+  il est haché avant d'être écrit, parce que l'identifiant d'un enregistrement CloudKit est la
+  seule partie qui n'est pas chiffrée.</p>
+  <p>Aucune donnée bancaire n'est revendue, partagée, transmise à un tiers, ni utilisée à des fins
+  publicitaires ou statistiques.</p>
+
+  <h2>Services externes contactés</h2>
+  <p>AUDN contacte les services suivants, uniquement quand l'utilisateur déclenche la fonction
+  concernée :</p>
+  <ul>
+    <li><strong>Enable Banking</strong> — récupération des comptes et des opérations, après
+    autorisation bancaire.</li>
+    <li><strong>Anthropic</strong> — assistant conversationnel intégré.</li>
+    <li><strong>Open Food Facts</strong> et <strong>USDA FoodData Central</strong> — recherche
+    d'informations nutritionnelles.</li>
+    <li><strong>Le portail d'emploi du temps (ADE)</strong> de l'établissement où étudie
+    l'utilisateur — récupération de son emploi du temps universitaire.</li>
+  </ul>
+
+  <h2>Durée de conservation</h2>
+  <p>Les données restent tant que l'utilisateur les garde. Supprimer l'application et ses données
+  iCloud les supprime définitivement ; l'auteur n'en conserve aucune copie, n'en ayant jamais reçu.</p>
+
+  <h2>Droits</h2>
+  <p>L'utilisateur étant l'unique détenteur de ses données, il peut à tout moment les consulter,
+  les exporter, les corriger ou les effacer depuis l'application et depuis les réglages iCloud de
+  son appareil.</p>
+
+  <div class="contact">
+    <p>Pour toute question : <a href="mailto:contact.alexandre.conty@gmail.com">contact.alexandre.conty@gmail.com</a></p>
+    <p>AUDN est en lecture seule sur les comptes bancaires : elle ne peut initier aucun paiement.</p>
+  </div>
+</div>
+
+</body>
+</html>

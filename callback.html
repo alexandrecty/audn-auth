@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Retour AUDN</title>
+<style>body{margin:0}img{max-width:100%}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+  :root {
+    --ground: #f6f7f8;
+    --panel: #ffffff;
+    --ink: #15181c;
+    --muted: #5b636d;
+    --rule: #dde1e6;
+    --accent: #1f5f5b;
+    --sans: "IBM Plex Sans", ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+    --serif: "IBM Plex Serif", ui-serif, Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0e1013;
+      --panel: #15181c;
+      --ink: #e5e8ec;
+      --muted: #98a0ab;
+      --rule: #242a31;
+      --accent: #74c2b9;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0e1013;
+    --panel: #15181c;
+    --ink: #e5e8ec;
+    --muted: #98a0ab;
+    --rule: #242a31;
+    --accent: #74c2b9;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  .sheet {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 56px 72px;
+  }
+
+  .masthead { border-bottom: 1px solid var(--rule); padding-bottom: 22px; margin-bottom: 36px; }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.2rem + 2vw, 2.3rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0 0 14px;
+  }
+  .stamp { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+  h2 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.08rem;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+    margin: 40px 0 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+  }
+  .masthead + h2 { margin-top: 0; padding-top: 0; border-top: none; }
+
+  p { margin: 0 0 16px; }
+  strong { font-weight: 600; }
+  em { color: var(--muted); }
+
+  ol, ul { margin: 0 0 16px; padding-left: 1.3em; }
+  li { margin-bottom: 9px; }
+  li::marker { color: var(--muted); font-family: var(--sans); font-size: 0.9em; }
+
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .contact {
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 16px 18px;
+    margin-top: 40px;
+  }
+  .contact p { margin: 0; }
+  .contact p + p { margin-top: 6px; color: var(--muted); }
+</style>
+
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <p class="eyebrow">AUDN</p>
+    <h1>Retour de votre banque</h1>
+    <p class="stamp">Ouverture de l'application…</p>
+  </header>
+  <p id="etat">Si l'application ne s'ouvre pas d'elle-même, touchez le bouton ci-dessous.</p>
+  <p><a class="bouton" id="lien" href="#">Ouvrir AUDN</a></p>
+  <div class="contact" id="secours" hidden>
+    <p><strong>L'application ne s'est pas ouverte.</strong> Copiez le code ci-dessous et collez-le
+    dans AUDN.</p>
+    <p><code id="brut"></code></p>
+  </div>
+</div>
+<style>
+  .bouton {
+    display: inline-block;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    color: var(--ground);
+    background: var(--accent);
+    padding: 11px 20px;
+    border-radius: 6px;
+  }
+  code { font-size: 0.82rem; word-break: break-all; color: var(--ink); }
+</style>
+<script>
+  (function () {
+    var suite = window.location.search + window.location.hash;
+    var cible = "audn://enablebanking/callback" + suite;
+    document.getElementById("lien").setAttribute("href", cible);
+    document.getElementById("brut").textContent = suite.replace(/^[?#]/, "") || "(aucun paramètre)";
+    window.setTimeout(function () {
+      document.getElementById("secours").hidden = false;
+      document.getElementById("etat").textContent =
+        "Si l'application ne s'ouvre pas, touchez le bouton ci-dessous.";
+    }, 2500);
+    window.location.replace(cible);
+  })();
+</script>
+</body>
+</html>

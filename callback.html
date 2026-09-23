@@ -112,16 +112,24 @@
 <div class="sheet">
   <header class="masthead">
     <p class="eyebrow">AUDN</p>
-    <h1>Retour de votre banque</h1>
-    <p class="stamp">Ouverture de l'application…</p>
+    <h1 id="titre">Retour de votre banque</h1>
+    <p class="stamp" id="stamp">Lecture de la réponse…</p>
   </header>
-  <p id="etat">Si l'application ne s'ouvre pas d'elle-même, touchez le bouton ci-dessous.</p>
-  <p><a class="bouton" id="lien" href="#">Ouvrir AUDN</a></p>
-  <div class="contact" id="secours" hidden>
-    <p><strong>L'application ne s'est pas ouverte.</strong> Copiez le code ci-dessous et collez-le
-    dans AUDN.</p>
+
+  <p id="etat">Un instant.</p>
+
+  <div class="contact" id="bloc-code" hidden>
+    <p><strong>Code d'autorisation reçu.</strong> Si AUDN ne s'ouvre pas, copiez-le et collez-le
+    dans l'application.</p>
     <p><code id="brut"></code></p>
   </div>
+
+  <div class="contact" id="bloc-erreur" hidden>
+    <p><strong>La banque ou Enable Banking a renvoyé une erreur.</strong></p>
+    <p><code id="err"></code></p>
+  </div>
+
+  <p id="p-lien" hidden><a class="bouton" id="lien" href="#">Ouvrir AUDN</a></p>
 </div>
 <style>
   .bouton {
@@ -139,16 +147,66 @@
 </style>
 <script>
   (function () {
-    var suite = window.location.search + window.location.hash;
-    var cible = "audn://enablebanking/callback" + suite;
+    // ⚠️ CETTE PAGE N'A PLUS LE DROIT DE SAUTER AVANT D'AVOIR AFFICHÉ.
+    //
+    // La version précédente faisait `location.replace("audn://…")` en première instruction. Sur un
+    // Mac, `audn://` n'a pas de gestionnaire : le navigateur affichait une erreur et l'activation
+    // « échouait sur la fin » — alors que la banque avait dit oui. Pire : quand Enable Banking
+    // renvoyait `?error=…`, la page le jetait avant qu'on puisse le lire, donc la panne ne disait
+    // jamais sa cause.
+    //
+    // Désormais : on AFFICHE d'abord, toujours. Le rebond vers l'app n'est tenté que là où il peut
+    // aboutir — iOS/iPadOS — et il ne détruit plus la page s'il échoue.
+    var brut = (window.location.search + window.location.hash).replace(/^[?#]/, "");
+    var p = new URLSearchParams(window.location.search.slice(1));
+    var h = new URLSearchParams(window.location.hash.slice(1));
+    function lire(k) { return p.get(k) || h.get(k); }
+
+    var code = lire("code");
+    var erreur = lire("error");
+    var detail = lire("error_description") || lire("error_message");
+
+    var titre = document.getElementById("titre");
+    var stamp = document.getElementById("stamp");
+    var etat = document.getElementById("etat");
+
+    if (erreur) {
+      titre.textContent = "L'autorisation n'a pas abouti";
+      stamp.textContent = "Rien n'a été connecté.";
+      etat.textContent = "Voici ce que le service a répondu, mot pour mot :";
+      document.getElementById("err").textContent = detail ? (erreur + " — " + detail) : erreur;
+      document.getElementById("bloc-erreur").hidden = false;
+      return;
+    }
+
+    if (!code) {
+      titre.textContent = "Rien à traiter";
+      stamp.textContent = "Cette page attend un retour de banque.";
+      etat.textContent = "Aucun code d'autorisation n'accompagne cette adresse. Si vous l'avez "
+        + "ouverte directement, c'est normal : elle ne sert qu'à la fin d'une connexion bancaire.";
+      return;
+    }
+
+    titre.textContent = "Autorisation reçue";
+    stamp.textContent = "Votre banque a accepté.";
+    document.getElementById("brut").textContent = brut;
+    document.getElementById("bloc-code").hidden = false;
+
+    var cible = "audn://enablebanking/callback?" + brut;
     document.getElementById("lien").setAttribute("href", cible);
-    document.getElementById("brut").textContent = suite.replace(/^[?#]/, "") || "(aucun paramètre)";
-    window.setTimeout(function () {
-      document.getElementById("secours").hidden = false;
-      document.getElementById("etat").textContent =
-        "Si l'application ne s'ouvre pas, touchez le bouton ci-dessous.";
-    }, 2500);
-    window.location.replace(cible);
+    document.getElementById("p-lien").hidden = false;
+
+    // Le rebond automatique n'a de sens que là où l'app existe. Ailleurs il ne produit qu'une
+    // erreur de navigateur par-dessus une page qui, elle, dit la vérité.
+    var estIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (estIOS) {
+      etat.textContent = "Ouverture d'AUDN…";
+      window.setTimeout(function () { window.location.href = cible; }, 400);
+    } else {
+      etat.textContent = "Cet appareil n'a pas AUDN installée. Ouvrez AUDN sur votre iPhone, "
+        + "ou copiez le code ci-dessous.";
+    }
   })();
 </script>
 </body>
